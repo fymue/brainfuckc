@@ -28,8 +28,8 @@ void help() {
 
 bool _is_bf_file(const char *file) {
   // check if input file ends in ".bf"
-  size_t offset = strnlen(file, PATH_LIMIT) - 3;
-  return strncmp(file + offset, BF_FILE_EXT, 3) == 0;
+  size_t offset = strnlen(file, PATH_LIMIT) - strlen(BF_FILE_EXT);
+  return strncmp(file + offset, BF_FILE_EXT, strlen(BF_FILE_EXT)) == 0;
 }
 
 int __init_out_file(FILE *out, int tape_size) {
@@ -235,7 +235,7 @@ int parse_args(int argc, char **argv) {
 
   int o = 0;
 
-  while ((o = getopt_long(argc, argv, ":hin:", long_opts, NULL)) != -1) {
+  while ((o = getopt_long(argc, argv, ":hin:p:", long_opts, NULL)) != -1) {
     switch (o) {
       case 'h' :
         help();
@@ -263,8 +263,8 @@ int parse_args(int argc, char **argv) {
     bool is_bf_file = _is_bf_file(argv[argc - 1]);
     if (optind == argc || !is_bf_file) {
       printf("No .bf file provided."
-             "Please provide a filethat ends in .bf\n"
-             "and that the path length doesn't exceed %d characters.\n",
+             "Please provide a file that ends in .bf\n"
+             "and ensure that the path length doesn't exceed %d characters.\n",
              PATH_LIMIT);
       return 1;
     }
