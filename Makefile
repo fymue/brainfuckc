@@ -9,4 +9,4 @@ bf_debug: bf.c
 	$(CC) $(DEBUGFLAGS) -o $@ bf.c
 
 clean:
-	rm -f bf *intermediate
+	rm -f bf bf_debug
