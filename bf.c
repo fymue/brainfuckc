@@ -93,6 +93,17 @@ void __parse_char(FILE *out, char c, int *indent) {
   }
 }
 
+void __run_bf_code(const char *file_name) {
+  // execute the generated C code
+  const int COMMAND_BUFFER_SIZE = 100;
+  char cmd[COMMAND_BUFFER_SIZE];
+
+  snprintf(cmd, COMMAND_BUFFER_SIZE,
+           "gcc -O3 -o tmp %s && ./tmp && rm -f tmp %s",
+           file_name, file_name);
+  system(cmd);
+}
+
 int parse_bf_string(const char *bf_string, int tape_size,
                     bool generate_intermediate) {
   // parse the provided string as if it was a ".bf" file
@@ -102,12 +113,8 @@ int parse_bf_string(const char *bf_string, int tape_size,
     return 1;
   }
 
-  FILE *out = NULL;
-  if (generate_intermediate) {
-    out = fopen("bf_program.c", "w");
-  } else {
-    out = stdout;
-  }
+  const char *file_name = "bf_program.c";
+  FILE *out = fopen(file_name, "w");
 
   int fail = __init_out_file(out, tape_size);
   if (fail) return fail;
@@ -119,10 +126,18 @@ int parse_bf_string(const char *bf_string, int tape_size,
     __parse_char(out, bf_string[i], &indent);
   }
 
-  return __close_out_file(out, &indent);
+  fail = __close_out_file(out, &indent);
+  if (fail) return fail;
+
+  if (!generate_intermediate) {
+    __run_bf_code(file_name);
+  }
+
+  return 0;
 }
 
-char* __get_bf_file_name(const char *bf_file_path) {
+char* __get_file_name(const char *bf_file_path) {
+  // extract the ".bf" file name from the user-specified path
   const int PATH_LENGTH = strnlen(bf_file_path, PATH_LIMIT);
   int start = 0;
   for (int i = PATH_LENGTH; i-- > 0;) {
@@ -163,15 +178,15 @@ int parse_bf_file(const char *bf_file_path, int tape_size,
     return 1;
   }
 
-  FILE *out = NULL;
-  char *bf_file_name = NULL;
+  char *file_name = NULL;
+  char *tmp_name = "tmp_bf_program.c";
   int fail = 0;
   if (generate_intermediate) {
-    bf_file_name = __get_bf_file_name(bf_file_path);
-    out = fopen(bf_file_name, "w");
+    file_name = __get_file_name(bf_file_path);
   } else {
-    out = stdout;
+    file_name = tmp_name;
   }
+  FILE *out = fopen(file_name, "w");
 
   fail = __init_out_file(out, tape_size);
   if (fail) return fail;
@@ -187,14 +202,21 @@ int parse_bf_file(const char *bf_file_path, int tape_size,
   fail = fclose(bf_file);
   if (fail) return fail;
 
-  free(bf_file_name);
+  fail = __close_out_file(out, &indent);
+  if (fail) return fail;
 
-  return __close_out_file(out, &indent);
+  if (!generate_intermediate) {
+    __run_bf_code(file_name);
+  } else {
+    free(file_name);
+  }
+
+  return 0;
 }
-
 
 int parse_args(int argc, char **argv) {
   // parse the command line arguments
+  // and call the "compiler backend" (if you want to call it that)
   if (argc == 1) {
     help();
     return 0;
@@ -228,6 +250,7 @@ int parse_args(int argc, char **argv) {
         tape_size = atoi(optarg);
         break;
       case '?' :
+      case ':' :
       default :
         printf("Unkown option -%c\n", (char)optopt);
         return 1;
