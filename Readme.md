@@ -31,7 +31,7 @@ Options:
 The input bf code can either be provided as a string argument with the `--parse` option or as a `.bf` file:
 
 ```
-./bf --parse [>+.]
+./bf --parse "+++[>--[>]----[----<]>---]>>.---.->..>++>-----.<<<<--.+>>>>>-[.<]"
 ./bf path/to/bf_code.bf
 ```
 
@@ -40,7 +40,7 @@ The input bf code can either be provided as a string argument with the `--parse`
 To use `brainfuckc` as a compiler, simply add the `--compile` option:
 
 ```
-./bf --compile --parse [>+.]
+./bf --compile --parse "+++[>--[>]----[----<]>---]>>.---.->..>++>-----.<<<<--.+>>>>>-[.<]"
 ./bf --compile path/to/bf_code.bf
 ```
 
