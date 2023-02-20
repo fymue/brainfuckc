@@ -17,12 +17,14 @@ make
 
 ## Usage
 
+```
 Usage: ./bf [options] file.bf
 
 Options:
 -p, --parse  STR      parse STR as brainfuck code
 -n, --tapesize N      specify the size of the tape (default: 30000)
 -c, --compile         compile the brainfuck code to C code
+```
 
 ### Interpreter mode
 
