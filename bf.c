@@ -419,7 +419,7 @@ int parse_bf_string(const char *bf_string, int tape_size,
 
     if (fail) return fail;
 
-    execute_generated_code(file_name);
+    if (!compile) execute_generated_code(file_name);
   } else {
     // run interpreter
     fail = run_bf_code(true, bf_string, NULL, tape_size);
@@ -468,7 +468,7 @@ int parse_bf_file(const char *bf_file_path, int tape_size,
     fail = fclose(bf_file);
     if (fail) return fail;
 
-    execute_generated_code(file_name);
+    if (!compile) execute_generated_code(file_name);
 
     free(file_name);
   } else {
