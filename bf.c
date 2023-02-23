@@ -242,8 +242,8 @@ void __generate_instruction(FILE *out, char c, int *indent) {
       fprintf(out, "%*s\n", (int)(strlen("(*i)--;") + *indent), "(*i)--;");
       break;
     case PRINT :
-      fprintf(out, "%*s\n", (int)(strlen("printf(\"%c\", *i);") + *indent),
-                            "printf(\"%c\", *i);");
+      fprintf(out, "%*s\n", (int)(strlen("putchar(*i);") + *indent),
+                            "putchar(*i);");
       break;
     case INSERT :
       fprintf(out, "%*s\n", (int)(strlen("*i = getchar();") + *indent),
