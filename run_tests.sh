@@ -14,6 +14,10 @@ check_equal() {
     input=$3
     no_newline=$4
     bfc_answer="ans.txt"
+    
+    # stdin gets piped into binary;
+    # if $input is empty, nothing happens
+    # and the program executes normally
 
     if [ -f "$1" ]; then
         # if input is file, call brainfuckc w/ file as input
@@ -25,7 +29,8 @@ check_equal() {
     
     # if real_answer isn't supposed to contain a trailing
     # newline, suppress the print of the trailing newline
-    # (using $3's existence as an indicator for this)
+    # (using $no_newline's existence as an indicator for this)
+
     if [ "$no_newline" ]; then
         if [ -f "$2" ]; then
             DIFF=$(diff $bfc_answer $real_answer)
