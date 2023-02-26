@@ -45,7 +45,3 @@ To use `brainfuckc` as a compiler, simply add the `--compile` option:
 ```
 
 This will output a `bf_code.c` file (or whatever you named your `.bf` file + `.c`) which you can compile and execute yourself.
-
-## TODO
-
-As of right now, I haven't finished implementing the actual interpreter yet. In the meantime, the program will simply compile the bf code to C code and compile/execute that code when invoked in interpreter mode.
