@@ -174,7 +174,6 @@ void __execute_instructions(unsigned char *code_ptr, const unsigned char *end,
                             unsigned char *tape_ptr, unsigned char **loops) {
   char curr_bf_instruction, inp;
   unsigned char *start = code_ptr;
-  long count = 0;
 
   // parse the current bf instruction and execute
   // the appropriate C instruction
@@ -226,7 +225,6 @@ void __execute_instructions(unsigned char *code_ptr, const unsigned char *end,
     }
 
     ++code_ptr;
-    count++;
   }
 }
 
@@ -359,7 +357,7 @@ int run_bf_code(bool parse_str, const char *bf_string,
   unsigned char **loops = (unsigned char**) malloc(size *
                                                   sizeof(unsigned char*));
 
-  long idx = 0;
+  long idx = 0;  // idx of current bf instruction
   int open_loop_i = 0, close_loop_i = 0;  // counters for opening/closing loops
   int mx_loops = 10, fail = 0;
 
@@ -374,8 +372,6 @@ int run_bf_code(bool parse_str, const char *bf_string,
                          &close_loop_i, &mx_loops, open_loops);
     }
   } else {
-    // read all bf instructions from the input file
-    // and write them to the code array
     char c;
 
     if (!bf_file) {
@@ -383,6 +379,8 @@ int run_bf_code(bool parse_str, const char *bf_string,
       return 1;
     }
 
+    // read all bf instructions from the input file
+    // and write them to the code array
     do {
       c = fgetc(bf_file);
       idx = __parse_char(c, code, idx, &open_loop_i,
